@@ -1,53 +1,72 @@
 # Devops-Netology
 
-## Игнорирование файлов в каталоге terraform:
-- Локальные каталоги .terraform
-- Файлы с раширением .tfstate и файлы где встречается .tfstate. 
-- Файл crash.log и файлы crash.*.log (где * любое количество символов)
-- Файлы с раширением .tvars и .tfvars.json
-- Файлы override.tf и override.tf.json
-- Файлы в имя которых заканчивается на _override.tf и _override.tf.json
-- Файлы .terraformrc, terraform.rc
+## ДЗ 3.1
 
-## 2.4. Инструменты Git
+**1. Ознакомьтесь с графическим интерфейсом VirtualBox, посмотрите как выглядит виртуальная машина, которую создал для вас Vagrant, какие аппаратные ресурсы ей выделены. Какие ресурсы выделены по-умолчанию?**
+```
+Выделено 1Гб памяти, 2 ядра процессора, 64Гб HDD, video memory 4Гб
+```
 
-2.4. Инструменты Git
+**2. Ознакомьтесь с возможностями конфигурации VirtualBox через Vagrantfile: документация. Как добавить оперативной памяти или ресурсов процессора виртуальной машине?**
+```
+Изменить Vagrantfile:
+config.vm.provider "virtualbox" do |vb|
+  vb.memory = 2048
+  vb.cpus = 4
+end
+```
 
-1. **git show aefea**
-- хеш: aefead2207ef7e2aa5dc81a34aedf0cad4c32545
-- Коментарий: Update CHANGELOG.md
 
-2. **git show -s 85024d3**
-- Тег: tag: v0.12.23
+**3. Ознакомиться с разделами man bash, почитать о настройках самого bash:
+какой переменной можно задать длину журнала history, и на какой строчке manual это описывается?**
+```
+HISTSIZE
+Строчка 862
+```
+**что делает директива ignoreboth в bash?**
+```
+Объединяет действие команд ignorespace и ignoredups (в историю не запишутся строки, которые начинаются с пробела и если в истории уже есть такая запись, то такая же записана не будет.
+```
 
-3. **git show --pretty=%P b8d720**
-- 56cd7859e05c36c06b56d013b55a252d0bb7e158
-- 9ea88f22fc6269854151c571162c5bcf958bee2b
+**4. В каких сценариях использования применимы скобки {} и на какой строчке man bash это описано?**
+```
+{ list; } list is simply executed in the current shell environment. 
+ Строка 257
+{ список; }
+Список просто выполняется в среде текущего командного интерпретатора.
+Список должен завершаться переводом строки или точкой с запятой.
+Команда группировки, статусом возврата выход из списка.
+```
 
-4. **git log v0.12.23..v0.12.24 --oneline**
+**5. Основываясь на предыдущем вопросе, как создать однократным вызовом touch 100000 файлов? А получилось ли создать 300000?**
+```
+Для создания файлов - touch {000001..100000}.txt
 
-- 33ff1c03bb (tag: v0.12.24) v0.12.24
-- b14b74c493 [Website] vmc provider links
-- 3f235065b9 Update CHANGELOG.md
-- 6ae64e247b registry: Fix panic when server is unreachable
-- 5c619ca1ba website: Remove links to the getting started guide's old location
-- 06275647e2 Update CHANGELOG.md
-- d5f9411f51 command: Fix bug when using terraform login on Windows
-- 4b6d06cc5d Update CHANGELOG.md
-- dd01a35078 Update CHANGELOG.md
-- 225466bc3e Cleanup after v0.12.23 release
+Создать 300000 - touch {000001..300000}.txt
+Получаем ошибку: -bash: /usr/bin/touch: Argument list too long
+За длину аргумента отвечает переменная ARG_MAX, getconf ARG_MAX - 2097152
+```
 
-5. **git log -S"func providerSource(" --oneline**
-- 8c928e8358 main: Consult local directories as potential mirrors of providers
+**6. В man bash поищите по /\[\[. Что делает конструкция [[ -d /tmp ]]**
+```
+Проверяет наличие директории tmp. -d истинно если файл существует и является директорией.
+Конструкция [[ ... ]] более предпочтительна, нежели [ ... ], поскольку позволяет избежать логических ошибок.
+```
 
-6. **git grep "func globalPluginDirs("** и **git log -s -L :globalPluginDirs:plugins.go --oneline**
-- 78b1220558 Remove config.go and update things using its aliases
-- 52dbf94834 keep .terraform.d/plugins for discovery
-- 41ab0aef7a Add missing OS_ARCH dir to global plugin paths
-- 66ebff90cd move some more plugin search path logic to command
-- 8364383c35 Push plugin discovery down into command package
+**7. Основываясь на знаниях о просмотре текущих (например, PATH) и установке новых переменных; командах, которые мы рассматривали, добейтесь в выводе type -a bash в виртуальной машине наличия первым пунктом в списке:
+bash is /tmp/new_path_directory/bash
+bash is /usr/local/bin/bash
+bash is /bin/bash
+(прочие строки могут отличаться содержимым и порядком)**
 
-7. **git log -S"func synchronizedWriters(" --oneline --pretty=format:"%h - %an, %s"**
-- 5ac311e2a9 - Martin Atkins, main: synchronize writes to VT100-faker on Windows
-- Author: Martin Atkins <mart@degeneration.co.uk>
+```
+mkdir /tmp/new_path_directory/
+cp /bin/bash /tmp/new_path_directory/
+PATH=/tmp/new_path_directory/:$PATH
+```
 
+**8. Чем отличается планирование команд с помощью batch и at?**
+ ```
+at      выполняет команды в указанное время
+batch   выполняет команды когда определенная загрузка системы, например ниже 1.5.
+```
