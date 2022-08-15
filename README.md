@@ -1,160 +1,198 @@
 # Devops-Netology
-ДЗ 3.2
 
-## ДЗ 3.2
 
-1. Какого типа команда cd? Попробуйте объяснить, почему она именно такого типа; опишите ход своих мыслей, если считаете что она могла бы быть другого типа.
+## ДЗ 3.3
 
-```
-
-type -t cd
-
-builtin - встроенная в оболочку программа. Она вызывается и выполняется в текущей оболочке. Если команда будет внешняя она не будет менят текущий коталог оболочки.
+1\. Какой системный вызов делает команда cd?
 
 ```
 
-2. Какая альтернатива без pipe команде grep &lt;some\\\_string&gt; &lt;some\\\_file&gt; | wc -l? man grep поможет в ответе на этот вопрос. Ознакомьтесь с документом о других подобных некорректных вариантах использования pipe.
+chdir("/tmp")
 
 ```
 
-grep &lt;some\\\_string&gt; &lt;some\\\_file&gt; -c
-
--c, --count Suppress normal output; instead print a count of matching lines for each input file.
+2\. Используя strace выясните, где находится база данных file на основании которой она делает свои догадки.
 
 ```
 
-3. Какой процесс с PID 1 является родителем для всех процессов в вашей виртуальной машине Ubuntu 20.04?
+/usr/share/misc/magic.mgc
+
+/usr/share/misc/magic.mgc: symbolic link to ../../lib/file/magic.mgc
 
 ```
 
-systemd(1)
-
-Посмотреть дерево процессов:
-
-pstree -p
-
-Посмотреть по PID:
-
-ps -p 1
-
-Статус процесса:
-
-cat /proc/1/status
+3\. Основываясь на знаниях о перенаправлении потоков предложите способ обнуления открытого удаленного файла (чтобы освободить место на файловой системе).
 
 ```
 
-4. Как будет выглядеть команда, которая перенаправит вывод stderr ls на другую сессию терминала?
+Ищем файловый дискриптор процеса и обнуляем его:
+
+cat /dev/null > /proc/$PID/fd/3
 
 ```
 
-Мы находимся по умолчанию в /dev/pts/0 (команда tty)
-
-cat error-test 2>/dev/pts/1
-
-В /dev/pts/1 будет вывод:
-
-cat: error-test: No such file or directory
+4.Занимают ли зомби-процессы какие-то ресурсы в ОС (CPU, RAM, IO)?
 
 ```
 
-5. Получится ли одновременно передать команде файл на stdin и вывести ее stdout в другой файл? Приведите работающий пример.
+Зомби не занимают памяти, но блокируют записи в таблице процессов, размер которой ограничен для каждого пользователя и системы в целом:
+
+SER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
+
+vagrant 2786 0.0 0.0 0 0 pts/0 Z 13:05 0:00 \[ls\] &lt;defunct&gt;
 
 ```
 
-cat &lt; file1 &gt; file2
+5.В iovisor BCC есть утилита opensnoop. На какие файлы вы увидели вызовы группы open за первую секунду работы утилиты?
 
 ```
 
-6. Получится ли вывести находясь в графическом режиме данные из PTY в какой-либо из эмуляторов TTY? Сможете ли вы наблюдать выводимые данные?
+vagrant@vagrant:~$ sudo /usr/sbin/opensnoop-bpfcc
+
+PID COMM FD ERR PATH
+
+640 irqbalance 6 0 /proc/interrupts
+
+640 irqbalance 6 0 /proc/stat
+
+640 irqbalance 6 0 /proc/irq/20/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/0/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/1/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/8/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/12/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/14/smp_affinity
+
+640 irqbalance 6 0 /proc/irq/15/smp_affinity
+
+1 systemd 12 0 /proc/619/cgroup
+
+1 systemd 12 0 /proc/650/cgroup
+
+1 systemd 12 0 /proc/386/cgroup
+
+845 vminfo 6 0 /var/run/utmp
+
+634 dbus-daemon -1 2 /usr/local/share/dbus-1/system-services
+
+634 dbus-daemon 21 0 /usr/share/dbus-1/system-services
+
+634 dbus-daemon -1 2 /lib/dbus-1/system-services
+
+634 dbus-daemon 21 0 /var/lib/snapd/dbus-1/system-services/
 
 ```
 
-Да, через перенаправление, увидеть выводимые данные на своем терминале не сможем, нужно перейти в эмулятор терминала с помощью Ctrl + Alt + F1..F6
+6\. Какой системный вызов использует uname -a? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в /proc, где можно узнать версию ядра и релиз ОС.
 
 ```
 
-7. Выполните команду bash 5>&1. К чему она приведет? Что будет, если вы выполните echo netology > /proc/$$/fd/5? Почему так происходит?
+struct utsname {
+
+char sysname\[\]; /* название операционной системы
+
+(например, «Linux») */
+
+char nodename\[\]; /* имя в сети, зависящее от реализации */
+
+char release\[\]; /* идентификатор выпуска ОС (например, «2.6.28») */
+
+char version\[\]; /* версия ОС */
+
+char machine\[\]; /* идентификатор аппаратного обеспечения */
+
+#ifdef \_GNU\_SOURCE
+
+char domainname\[\]; /* доменное имя NIS или YP */
+
+#endif
+
+};
+
+/proc/version --- This string identifies the kernel version that is currently running. It includes the contents of /proc/sys/kernel/ostype, /proc/sys/kernel/osrelease and /proc/sys/kernel/version.
 
 ```
 
-bash 5>&1 создаёт дескриптор c FD 5 и перенаправит его в stdout
-
-далее команда выведет netology в дескриптор "5", который был перенаправлен в stdout и на терминале будет вывод: netology
+7\. Чем отличается последовательность команд через ; и через && в bash?
 
 ```
 
-8. Получится ли в качестве входного потока для pipe использовать только stderr команды, не потеряв при этом отображение stdout на pty? Напоминаем: по умолчанию через pipe передается только stdout команды слева от | на stdin команды справа. Это можно сделать, поменяв стандартные потоки местами через промежуточный новый дескриптор, который вы научились создавать в предыдущем вопросе.
+Если команды разделены ';' то они выполняются последовательно, не зависимо от кода завершения. В случае разделения команд '&&', следующая команда будет выполнена только если предыдущая вернёт код 0 (успешное завершение).
+
+set -e Exit immediately if a command exits with a non-zero status. Поведение будет аналогично &&.
 
 ```
 
-cat test 5>&2 2>&1 1>&5 (test не существует.)
+8\. Из каких опций состоит режим bash set -euxo pipefail и почему его хорошо было бы использовать в сценариях?
 
 ```
 
-9. Что выведет команда cat /proc/$$/environ? Как еще можно получить аналогичный по содержанию вывод?
+-e Exit immediately if a command exits with a non-zero status.
+
+-u Treat unset variables as an error when substituting.
+
+-x Print commands and their arguments as they are executed.
+
+-o Set the variable corresponding to option-name:
+
+pipefail the return value of a pipeline is the status of
+
+the last command to exit with a non-zero status,
+
+or zero if no command exited with a non-zero status
+
+Данный режим полезно использовать при отладке сценариев.
 
 ```
 
-Переменные окружения. Аналогично export или env.
+9\. Используя -o stat для ps, определите, какой наиболее часто встречающийся статус у процессов в системе.
 
 ```
 
-10. Используя man, опишите что доступно по адресам /proc//cmdline, /proc//exe.
+agrant@vagrant:~$ ps -o stat
 
-```
+STAT
 
-/ proc / \\\[pid\\\] / cmdline - это файл только для чтения, который содержит полную информацию о процессе из командной строки. Если процесс был заменен местами в дополнение к памяти или процесс является зомби-процессом, то этот файл не имеет содержимого. Файл заканчивается нулевым символом вместо символа новой строки
+Ss
 
-/ proc / \\\[pid\\\] / exe - это символическая ссылка на фактически работающую программу.
+R+
 
-```
+D uninterruptible sleep (usually IO)
 
-11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью /proc/cpuinfo.
+I Idle kernel thread
 
-```
+R running or runnable (on run queue)
 
-sse4_2
+S interruptible sleep (waiting for an event to complete)
 
-grep sse /proc/cpuinfo
+T stopped by job control signal
 
-```
+t stopped by debugger during the tracing
 
-12. При открытии нового окна терминала и vagrant ssh создается новая сессия и выделяется pty. Это можно подтвердить командой tty, которая упоминалась в лекции 3.2. Однако:
+W paging (not valid since the 2.6.xx kernel)
 
-vagrant@netology1:~$ ssh localhost 'tty' not a tty Почитайте, почему так происходит, и как изменить поведение.
+X dead (should never be seen)
 
-```
+Z defunct ("zombie") process, terminated but not reaped by its parent
 
-SSH не устанавливает TTY по умолчанию, когда в списке аргументов передается явная команда (в отличие от запуска удаленной интерактивной оболочки в качестве операции по умолчанию)
+< high-priority (not nice to other users)
 
-Для изменения такого поведения нужно использовать аргумент -t, подробности:
+N low-priority (nice to other users)
 
-Quoting the man page for ssh:
+L has pages locked into memory (for real-time and custom IO)
 
--t - Force pseudo-terminal allocation. This can be used to execute arbitrary screen-based programs on a remote machine, which can be very useful, e.g. when implementing menu services. Multiple -t options force tty allocation, even if ssh has no local tty.
+s is a session leader
 
-Quoting the ssh_config man page:
+l is multi-threaded (using CLONE_THREAD, like NPTL pthreads do)
 
-RequestTTY - Specifies whether to request a pseudo-tty for the session. The argument may be one of: no (never request a TTY), yes (always request a TTY when standard input is a TTY), force (always request a TTY) or auto (request a TTY when opening a login session). This option mirrors the -t and -T flags for ssh(1).
+\+ is in the foreground process group
 
-```
+Ss -- Спящий (ожидающий) процесс являющийся лидером сессии
 
-13. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись reptyr. Например, так можно перенести в screen процесс, который вы запустили по ошибке в обычной SSH-сессии.
-
-```
-
-Работает только через sudo reptyr -T $PID, при этом многие вещи перехватить не получается:
-
-Unable to attach to pid 21177: Permission denied
-
-```
-
-14. sudo echo string > /root/new\\\_file не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без sudo под вашим пользователем. Для решения данной проблемы можно использовать конструкцию echo string | sudo tee /root/new\\\_file. Узнайте что делает команда tee и почему в отличие от sudo echo команда с sudo tee будет работать.
-
-```
-
-Команда tee считывает стандартный ввод (stdin), после чего записывает его в стандартный вывод (stdout) и одновременно копирует его в подготовленный файл или переменную
-
-Работает т.к. запущена от sudo, команда выполняется с привелегияеми root.
+R+ -- запущенный в фоне процесс.
 
 ```
