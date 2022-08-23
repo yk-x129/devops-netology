@@ -19,7 +19,7 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart=/usr/local/bin/node_exporter
+ExecStart=/usr/local/bin/node_exporter $ARGUMENTS_FROM_CONFIG
 Environment=/etc/node_exporter/*.conf
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
@@ -27,6 +27,11 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
+```
+В файле *.conf будет:
+ARGUMENTS_FROM_CONFIG=-opt1 val1 -opt2 val2
+```
+
 Процес нормально стартует после ребута ВМ:
 ``` 
  node_exporter.service - Node Exporter Service
