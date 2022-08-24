@@ -19,7 +19,7 @@ After=network.target
 User=nodeusr
 Group=nodeusr
 Type=simple
-ExecStart=/usr/local/bin/node_exporter $ARGUMENTS_FROM_CONFIG
+ExecStart=/usr/local/bin/node_exporter $OPTIONS_FROM_CONFIG
 Environment=/etc/node_exporter/*.conf
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
@@ -29,7 +29,7 @@ WantedBy=multi-user.target
 ```
 ```
 В файле *.conf будет:
-ARGUMENTS_FROM_CONFIG=-opt1 val1 -opt2 val2
+OPTIONS_FROM_CONFIG=--web.max-requests=40 --log.level=info
 ```
 
 Процес нормально стартует после ребута ВМ:
@@ -111,5 +111,11 @@ f
 
 таким образом это функция, которая параллельно пускает два своих экземпляра. Каждый пускает ещё по два и т.д. 
 При отсутствии лимита на число процессов машина быстро исчерпывает физическую память и уходит в своп.
+
+При запуске стабилизирует процесс:
+cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-4.scope
+
+Cgroups - это способ ограничить ресурсы процессов внутри конкретной cgroup. 
+Задача находились в cgroup и достигла своего предела pid / task.
 ```
 
