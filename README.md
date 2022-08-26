@@ -104,6 +104,7 @@ root@vagrant:~# ulimit -n    -  мягкое значение устанавли
 ```
 root@vagrant:~# unshare --fork --pid --mount-proc sleep 1h
 ```
+```
 root@vagrant:~# ps aux | grep sleep
 root        6493  0.0  0.0   5480   580 pts/0    T    12:42   0:00 unshare --fork --pid --mount-proc sleep 1h
 root        6494  0.0  0.0   5476   584 pts/0    S    12:42   0:00 sleep 1h
