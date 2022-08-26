@@ -110,7 +110,9 @@ root        6493  0.0  0.0   5480   580 pts/0    T    12:42   0:00 unshare --for
 root        6494  0.0  0.0   5476   584 pts/0    S    12:42   0:00 sleep 1h
 root        6496  0.0  0.0   6432   720 pts/0    S+   12:43   0:00 grep --color=auto sleep
 ```
+```
 root@vagrant:~# nsenter -t 6494 -p -m 
+```
 root@vagrant:/# ps
     PID TTY          TIME CMD
       1 pts/0    00:00:00 sleep
