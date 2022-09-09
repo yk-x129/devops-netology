@@ -29,7 +29,7 @@ X-DNS-Prefetch-Control: off
 ```
 2. Повторите задание 1 в браузере, используя консоль разработчика F12.
 
-![dev-console](https://github.com/yk-x129/devops-netology/HW/images/dev-console.png)
+![dev-console](https://github.com/yk-x129/devops-netology/blob/main/HW/images/dev-console.png)
 
 307 Internal Redirect
 
@@ -107,11 +107,8 @@ traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
 ```
 
 6. Повторите задание 5 в утилите mtr. На каком участке наибольшая задержка - delay?
-```
-mtr -zn 8.8.8.8
-![mtr](https://github.com/yk-x129/devops-netology/HW/images/mtr.png)
 
-```
+![mtr](https://github.com/yk-x129/devops-netology/blob/main/HW/images/mtr.png)
 
 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой dig
 ```
