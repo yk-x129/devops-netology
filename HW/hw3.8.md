@@ -79,6 +79,6 @@ UNCONN                  0                       0                               
 68/UDP - DHCP clent port
 ```
 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали.
-```
+
 ![netplan](https://github.com/yk-x129/devops-netology/blob/main/HW/images/netplan.png)
-```
+
