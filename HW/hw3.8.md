@@ -1,6 +1,6 @@
 ##3.8
 1. Подключитесь к публичному маршрутизатору в интернет. Найдите маршрут к вашему публичному IP
-
+```
 route-views>show ip route 62.231.19.142   
 Routing entry for 62.231.0.0/19
   Known via "bgp 6447", distance 20, metric 0
