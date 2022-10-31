@@ -219,4 +219,4 @@ vagrant@vagrant:~$
 vagrant@ubuntu-bionic:~$ sudo tcpdump -c 100 -i enp0s8 -w enp0s8.pcap
 PS C:\Users\ykarp\.ssh> scp vagrant@192.168.1.34:/home/vagrant/enp0s8.pcap ..\vagrant\
 ```
-![Иллюстрация к 1 заданию](https://github.com/yk-x129/devops-netology/blob/main/HW/images/hw39_scr3.png)
+![Иллюстрация к 1 заданию](https://github.com/yk-x129/devops-netology/blob/main/HW/images/hw29_scr3.png)
