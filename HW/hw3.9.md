@@ -2,12 +2,12 @@
 
 1. Установите Bitwarden плагин для браузера. Зарегистрируйтесь и сохраните несколько паролей.
 
-![Иллюстрация к 1 заданию](https://github.com/jon/coolproject/raw/master/image/image.png)
+![Иллюстрация к 1 заданию](HW/images/hw39_scr1.png)
 
 
 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden аккаунт через Google authenticator OTP.
 
-![Иллюстрация к 2 заданию](https://github.com/jon/coolproject/raw/master/image/image.png)
+![Иллюстрация к 2 заданию](HW/images/hw39_scr2.png)
 
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
@@ -219,4 +219,4 @@ vagrant@vagrant:~$
 vagrant@ubuntu-bionic:~$ sudo tcpdump -c 100 -i enp0s8 -w enp0s8.pcap
 PS C:\Users\ykarp\.ssh> scp vagrant@192.168.1.34:/home/vagrant/enp0s8.pcap ..\vagrant\
 
-![Иллюстрация к 7 заданию](https://github.com/jon/coolproject/raw/master/image/image.png)
+![Иллюстрация к 7 заданию](HW/images/hw39_scr3.png)
