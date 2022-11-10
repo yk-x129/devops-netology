@@ -66,7 +66,7 @@ latest: digest: sha256:a6ca1ca08ed401fbba9365e9bb9b3e7e6869cfd32481f62ff26075234
 vagrant@ubuntu-bionic:~/nginx$
 ```
 
-Репозиторий: <https://hub.docker.com/r/literis8/nginx-netology/>
+Репозиторий: <https://hub.docker.com/r/x129/nginx-netology>
 
 ## Задача 2
 Посмотрите на сценарий ниже и ответьте на вопрос: "Подходит ли в этом сценарии использование Docker контейнеров или 
